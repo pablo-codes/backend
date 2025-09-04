@@ -88,7 +88,7 @@ try {
         console.log(`📚 Health check: http://localhost:${PORT}/api/health`);
     });
 } catch (err) {
-    console.error("❌ Failed to connect DB:", err.message);
+    console.error("❌ Failed to connect DB:", err);
     process.exit(1);
 }
 
