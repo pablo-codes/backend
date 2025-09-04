@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node loader.cjs",
     "test": "nodemon test/testBackend.js",
     "test-prompt": "nodemon test/testPrompt.js",
     "dev": "nodemon server.js"
