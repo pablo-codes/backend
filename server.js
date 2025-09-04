@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 if (process.env.NODE_ENV === 'production') {
     corsOptions = {
-        origin: '',
+        origin: 'https://pablo-codes.github.io',
         preflightContinue: false,
         maxAge: 600,
         // credentials: true,

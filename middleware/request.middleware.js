@@ -7,12 +7,12 @@ export const requestLogger = (req, res, next) => {
     try {
         const clientIp = requestIp.getClientIp(req);
 
-        console.log(clientIp)
+
         // Lookup geo info
 
         const geo = geoip.lookup(clientIp);
 
-        console.log(geo)
+
         logger.debug(
             {
                 method: req.method,
