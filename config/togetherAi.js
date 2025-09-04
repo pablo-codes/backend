@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import OpenAI from 'openai';
+import TogetherAi from 'together-ai';
 import logger from '../utils/logger.util.js';
 
 dotenv.config();
@@ -11,7 +11,7 @@ const togetherAIConfig = {
 
     // Embedding model configuration
     embeddingModel: {
-        name: 'BAAI/bge-base-en-v1.5',
+        name: 'togethercomputer/m2-bert-80M-32k-retrieval',
         dimensions: 768
     },
 
@@ -26,7 +26,7 @@ const togetherAIConfig = {
 };
 
 // Initialize OpenAI client for TogetherAI
-const togetherAIClient = new OpenAI({
+const togetherAIClient = new TogetherAi({
     apiKey: togetherAIConfig.apiKey,
     baseURL: togetherAIConfig.baseUrl,
 });

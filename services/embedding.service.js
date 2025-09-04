@@ -11,7 +11,9 @@ const generateEmbedding = async (text) => {
         if (!text || typeof text !== 'string') {
             throw new Error('Invalid text input for embedding generation');
         }
+
         const queryWithPrefix = `query: ${text}`;
+
         // Truncate text if too long for the model (BAAI/bge-base-en-v1.5 optimal length)
         const truncatedText = queryWithPrefix.substring(0, 512);
 
@@ -20,7 +22,6 @@ const generateEmbedding = async (text) => {
             input: truncatedText,
             model: togetherAIConfig.embeddingModel.name,
         });
-
         // Return the embedding vector
         return response.data[0].embedding;
     } catch (error) {
