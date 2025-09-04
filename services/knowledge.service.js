@@ -7,16 +7,15 @@ import { db, dbConfig } from '../config/db.js';
  * @param {number} threshold - Minimum similarity threshold
  * @returns {Promise<Array>} Array of relevant documents
  */
-const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7, text) => {
+const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7, text = '') => {
     try {
-
         const collection = db.collection(dbConfig.collection);
 
         // Perform vector similarity search using MongoDB Atlas Vector Search
         const pipeline = [
             {
                 $vectorSearch: {
-                    index: "vector_index", // Make sure this index exists in your MongoDB collection
+                    index: "vector_index",
                     path: "embedding",
                     queryVector: queryEmbedding,
                     numCandidates: 100,
@@ -37,6 +36,18 @@ const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7,
                 $sort: {
                     score: -1
                 }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    url: 1,
+                    title: 1,
+                    content: 1,
+                    extractedData: 1,
+                    meta: 1,
+                    score: 1,
+
+                }
             }
         ];
 
@@ -45,7 +56,10 @@ const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7,
     } catch (error) {
         console.error('Error searching relevant content:', error.message);
         // Fallback to text search if vector search fails
-        return await searchTextContent(text, limit);
+        if (text) {
+            return await searchTextContent(text, limit);
+        }
+        return [];
     }
 };
 

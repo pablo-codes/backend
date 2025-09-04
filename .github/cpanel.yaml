@@ -1,0 +1,27 @@
+on:
+  push:
+    branches: ["dev"]
+
+name: 🛸Deploy to Perzsi-Rentals-Dev-Backend
+
+jobs:
+  web-deploy:
+    name: 🎊Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v3
+
+      - name: Uses node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: 📁Sync files and restart app
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.DEV_HOSTNAME }}
+          username: ${{ secrets.DEV_USERNAME }}
+          password: ${{ secrets.DEV_PASSWORD }}
+          protocol: ftps
+          server-dir: /
