@@ -6,9 +6,9 @@ dotenv.config();
 
 // MongoDB Configuration
 const dbConfig = {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017',
-    database: process.env.MONGODB_DATABASE || 'business_analysis_school',
-    collection: process.env.MONGODB_COLLECTION || 'embeddings'
+    uri: process.env.MONGODB_URI,
+    database: process.env.MONGODB_DATABASE,
+    collection: process.env.MONGODB_COLLECTION
 };
 
 

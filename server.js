@@ -13,7 +13,7 @@ dotenv.config();
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
 // Middleware
 
@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 if (process.env.NODE_ENV === 'production') {
     corsOptions = {
-        origin: 'https://dev079.perzsirentals.com',
+        origin: '',
         preflightContinue: false,
         maxAge: 600,
         // credentials: true,

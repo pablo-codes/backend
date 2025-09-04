@@ -2,7 +2,7 @@ on:
   push:
     branches: ["dev"]
 
-name: 🛸Deploy to Perzsi-Rentals-Dev-Backend
+name: 🛸Deploy to Eny Consulting Chat Backend
 
 jobs:
   web-deploy:
