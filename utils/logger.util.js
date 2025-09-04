@@ -16,7 +16,7 @@ const devTransport = {
 const prodTransport = {
     targets: [
         {
-            level: 'request',
+            level: 'debug',
             target: "pino-roll",
             options: {
                 file: "./logs/request",
@@ -42,7 +42,7 @@ const prodTransport = {
             }
         },
         {
-            level: 'info', // logs info, warn, etc. (but NOT error)
+            level: 'info',
             target: "pino-roll",
             options: {
                 file: "./logs/app",
@@ -66,9 +66,6 @@ const logger = pino({
 
     level: process.env.LOG_LEVEL || "info",
     transport: transport,
-    customLevels: {
-        request: 15,
-    },
     timestamp: pino.stdTimeFunctions.isoTime
 })
 

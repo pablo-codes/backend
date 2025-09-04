@@ -13,7 +13,7 @@ export const requestLogger = (req, res, next) => {
         const geo = geoip.lookup(clientIp);
 
         console.log(geo)
-        logger.request(
+        logger.debug(
             {
                 method: req.method,
                 url: req.url,
