@@ -116,11 +116,11 @@ const handleCsvExport = async (req, res) => {
         // Return file link regardless
         res.json({
             message: 'CSV ready',
-            url: '/download/lead_data.csv'
+
         });
     } catch (error) {
         logger.error(error, 'CSV export error:');
-        res.status(500).json({ error: 'Failed to generate CSV' });
+        res.json({ error: 'Failed to generate CSV', url: process.env.BACKEND_URL + '/download/lead_data.csv' });
     }
 };
 
