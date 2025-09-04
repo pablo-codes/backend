@@ -85,7 +85,7 @@ try {
 
     app.listen(PORT, () => {
         console.log(`🚀 Server running on port ${PORT}`);
-        console.log(`📚 Health check: http://localhost:${PORT}/api/health`);
+        console.log(`📚 Health check: ${process.env.BACKEND_URL}/api/health`);
     });
 } catch (err) {
     console.error("❌ Failed to connect DB:", err);
