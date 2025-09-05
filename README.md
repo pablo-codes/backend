@@ -1,193 +1,149 @@
-# Business Analysis School AI API
+# Business Analysis School AI Support Portal – Backend
 
-## Overview
-This project is a backend API built with Express.js and Node.js. It leverages MongoDB for vector-based knowledge retrieval and integrates with the TogetherAI API to power an intelligent chatbot for the Business Analysis School support portal.
-
-## Features
-- **Express.js**: Serves as the robust framework for building the RESTful API endpoints.
-- **MongoDB**: Utilized as a vector database to store and perform similarity searches on text embeddings for a Retrieval-Augmented Generation (RAG) system.
-- **TogetherAI**: Provides state-of-the-art models for generating text embeddings and powering conversational AI responses.
-- **GeoIP-lite**: Enables geolocation of user IP addresses for lead tracking and analytics.
-- **Pino**: Implements high-performance, structured logging for monitoring and debugging.
-
-## Getting Started
-### Installation
-Follow these steps to set up the project locally.
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/eny-consulting-backend.git
-    cd eny-consulting-backend
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-
-3.  **Set up environment variables:**
-    Create a `.env` file in the root directory and populate it using the `.env-example` file as a template.
-
-4.  **Start the development server:**
-    ```bash
-    npm run dev
-    ```
-    The server will be running at `http://localhost:5000`.
-
-### Environment Variables
-The following environment variables are required for the application to run.
-
-```ini
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-BACKEND_URL=http://localhost:5000
-
-# TogetherAI Configuration
-TOGETHERAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/
-MONGODB_DATABASE=vector_db
-MONGODB_COLLECTION=embeddings
-LEAD_COLLECTION=leads
-
-# File Storage
-LEAD_DATA_FILE=./data/lead_data.txt
-```
-
-## API Documentation
-### Base URL
-`/api`
-
-### Endpoints
-#### GET /health
-A health check endpoint to verify that the API is running correctly.
-
-**Request**:
-No payload required.
-
-**Response**:
-```json
-{
-    "status": "OK",
-    "message": "Business Analysis School AI Portal API is running",
-    "timestamp": "2024-09-05T10:00:00.000Z"
-}
-```
-
-**Errors**:
-- `500 Internal Server Error`: The server encountered an unexpected condition.
+An Express.js + MongoDB + TogetherAI backend that powers AI-driven chat responses, lead tracking, embeddings, and vector search for contextual knowledge retrieval.
 
 ---
-#### POST /chat/message
-Processes a user's message, searches the knowledge base, and generates a response using the AI model.
 
-**Request**:
-```json
-{
-  "message": "What is the course on Data Analytics?"
-}
-```
+## 🚀 Features
 
-**Response**:
-```json
-{
-    "response": "Our Data Analytics Accelerator is a 6-week, certified program designed to launch your career. It covers key concepts and practical skills.",
-    "confidence": 0.85,
-    "cta": {
-        "text": "Launch your Data Analytics career in just 6 weeks. Enroll in our Accelerator Course.",
-        "type": "data_analytics_course_enrollment",
-        "url": "https://www.businessanalysisschool.com/data-analytics-accelerator-course#payment"
-    },
-    "sources": [
-        "https://www.businessanalysisschool.com/data-analytics-accelerator-course"
-    ],
-    "usage": {
-        "prompt_tokens": 150,
-        "completion_tokens": 75,
-        "total_tokens": 225
-    }
-}
-```
+### Chat Service
 
-**Errors**:
-- `400 Bad Request`: `Message is required and must be a string`.
-- `500 Internal Server Error`: An error occurred during embedding generation, search, or AI response generation.
+- Powered by **Meta-Llama-3.1-8B-Instruct-Turbo** (TogetherAI)
+- Context-aware prompt construction
+- Confidence scoring:
+  - Response confidence
+  - Search confidence
+  - Content-quality adjustments
+- AI response enriched with **dynamic CTAs**
 
----
-#### GET /chat/health
-Checks the health and operational status of the chat service.
+### Embeddings & Knowledge Base
 
-**Request**:
-No payload required.
+- Generates embeddings using **BAAI/bge-base-en-v1.5** (TogetherAI)
+- Stores embeddings in **MongoDB Atlas Vector Search**
+- Falls back to regex-based text search when vector search is unavailable
 
-**Response**:
-```json
-{
-    "status": "OK",
-    "message": "Chat service is operational",
-    "timestamp": "2024-09-05T10:05:00.000Z"
-}
-```
+### Lead Tracking
 
-**Errors**:
-- `500 Internal Server Error`: The service health check failed.
+- Tracks CTA clicks (with IP + GeoIP lookup)
+- Stores leads in MongoDB
+- Exports leads as CSV
+
+### System Health
+
+- `/api/health` – Global health check
+- `/api/chat/health` – Chat service status
+- `/api/track/health` – Lead tracking service status
+
+### Security & Middleware
+
+- CORS with production & development configs
+- Helmet for secure HTTP headers
+- Request logger (method, URL, IP, User-Agent, GeoIP location)
 
 ---
-#### POST /track/lead
-Tracks a lead when a user clicks a Call-to-Action (CTA) link. It captures the user's IP and geolocation.
 
-**Request**:
-```json
-{
-  "ctaType": "data_analytics_course_enrollment",
-  "ctaUrl": "https://www.businessanalysisschool.com/data-analytics-accelerator-course#payment"
-}
-```
+## 🛠 Tech Stack
 
-**Response**:
-```json
-{
-    "success": true,
-    "message": "Lead tracked successfully"
-}
-```
-
-**Errors**:
-- `400 Bad Request`: `CTA type is required` or `CTA URL is required`.
-- `500 Internal Server Error`: `Failed to track lead`.
+- **Backend**: Express.js
+- **Database**: MongoDB Atlas
+- **AI Models**: TogetherAI (LLaMA-3.1-8B, BAAI/bge-base-en-v1.5)
+- **Libraries**: cors, helmet, dotenv, geoip-lite, request-ip
 
 ---
-#### GET /track/export-csv
-Exports all captured lead data as a downloadable CSV file.
 
-**Request**:
-No payload required.
+## ⚙️ Setup & Installation
 
-**Response**:
-A `text/csv` file with the following headers: `ip_address,country,city,region,timestamp,cta_type,cta_url`.
+1. **Clone repository**
 
-**Errors**:
-- `500 Internal Server Error`: `Failed to generate CSV`.
+   ```bash
+   git clone <repo-url>
+   cd backend
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**
+   Create a `.env` file in the project root:
+
+   ```env
+   NODE_ENV=development
+   PORT=5000
+
+   # MongoDB
+   MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net
+   MONGODB_DATABASE=business_analysis_portal
+   MONGODB_COLLECTION=knowledge_base
+   LEAD_COLLECTION=leads
+
+   # TogetherAI
+   TOGETHERAI_API_KEY=your_api_key_here
+   ```
+
+4. **Run in development**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Run in production**
+
+   ```bash
+   npm start
+   ```
 
 ---
-#### GET /track/health
-Checks the health and operational status of the lead tracking service.
 
-**Request**:
-No payload required.
+## 📡 API Endpoints
 
-**Response**:
-```json
-{
-    "status": "OK",
-    "message": "Lead service is operational",
-    "timestamp": "2024-09-05T10:10:00.000Z"
-}
-```
+### Root
 
-**Errors**:
-- `500 Internal Server Error`: `Lead service health check failed`.
+- `GET /` → Welcome message
 
-[![Readme was generated by Dokugen](https://img.shields.io/badge/Readme%20was%20generated%20by-Dokugen-brightgreen)](https://www.npmjs.com/package/dokugen)
+### System Health
+
+- `GET /api/health` → API health status
+
+### Chat
+
+- `POST /api/chat/message` → Process chat message and return AI response
+- `GET /api/chat/health` → Chat service health
+
+### Lead Tracking
+
+- `POST /api/track/lead` → Track CTA click
+- `GET /api/track/export-csv` → Export leads as CSV file
+- `GET /api/track/health` → Lead tracking service health
+
+---
+
+## 🔄 How It Works
+
+1. User sends a message →
+2. Embedding is generated →
+3. Vector search in MongoDB →
+4. Confidence scoring is applied →
+5. AI response generated with TogetherAI →
+6. Lead tracking records CTA interactions
+
+---
+
+## ⚠️ Error Handling
+
+- Structured JSON errors
+- Stack trace only visible in development mode
+
+---
+
+## 📑 Logging
+
+The request logger captures:
+
+- HTTP Method & URL
+- IP Address & GeoIP location
+- User-Agent
+
+---

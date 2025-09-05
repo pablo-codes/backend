@@ -8,7 +8,7 @@ import { db, dbConfig } from '../config/db.js';
  * @param {number} threshold - Minimum similarity threshold
  * @returns {Promise<Array>} Array of relevant documents
  */
-const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7, text = '') => {
+export const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7, text = '') => {
     try {
         const collection = db.collection(dbConfig.collection);
         // Perform vector similarity search using MongoDB Atlas Vector Search
@@ -59,7 +59,7 @@ const searchRelevantContent = async (queryEmbedding, limit = 5, threshold = 0.7,
  * @param {number} limit - Number of results to return
  * @returns {Promise<Array>} Array of relevant documents
  */
-const searchTextContent = async (query, limit = 5) => {
+export const searchTextContent = async (query, limit = 5) => {
     try {
 
         const collection = db.collection(process.env.MONGODB_COLLECTION || 'embeddings');
@@ -134,8 +134,3 @@ const searchTextContent = async (query, limit = 5) => {
 //         return null;
 //     }
 // };
-
-export {
-    searchRelevantContent,
-    searchTextContent,
-};

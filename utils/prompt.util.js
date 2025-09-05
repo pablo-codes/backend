@@ -111,11 +111,11 @@ Current date: ${new Date().toLocaleDateString()}`
     const userMessage = {
         role: "user",
         content: `Context Information:
-${context}
+       ${context}
 
-Question: ${userQuery}
+         Question: ${userQuery}
 
-Please provide a helpful and accurate response based on the context above. Include relevant links and mention specific programs when appropriate.`
+         Please provide a helpful and accurate response based on the context above. Include relevant links and mention specific programs when appropriate.`
     };
 
     return [systemMessage, userMessage];

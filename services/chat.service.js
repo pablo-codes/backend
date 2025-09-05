@@ -7,7 +7,7 @@ import { togetherAIClient, togetherAIConfig } from '../config/togetherAi.js';
  * @param {Object} options - Additional options for the chat completion
  * @returns {Promise<Object>} Chat response with content and metadata
  */
-const generateChatResponse = async (messages, options = {}) => {
+export const generateChatResponse = async (messages, options = {}) => {
     try {
         if (!togetherAIConfig.apiKey) {
             throw new Error('TOGETHERAI_API_KEY not configured');
@@ -50,7 +50,3 @@ const generateChatResponse = async (messages, options = {}) => {
 
 
 
-export {
-    generateChatResponse,
-
-};

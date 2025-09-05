@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { client } from './config/db.js';
 import apiRoutes from './routes/api.route.js';
 import helmet from 'helmet';
 import { requestLogger } from './middleware/request.middleware.js';

@@ -7,7 +7,7 @@
  * @param {Array} contextData - Context data used to generate response
  * @returns {number} Confidence score between 0 and 1
  */
-const calculateResponseConfidence = (response, usage, contextData = []) => {
+export const calculateResponseConfidence = (response, usage, contextData = []) => {
     try {
         // Validate inputs
         if (!response || typeof response !== 'string') {
@@ -50,7 +50,7 @@ const calculateResponseConfidence = (response, usage, contextData = []) => {
  * @param {string} responseType - Type of response (standard, complex, sensitive)
  * @returns {boolean} Whether confidence is sufficient
  */
-const isConfidenceSufficient = (confidence, responseType = 'standard') => {
+export const isConfidenceSufficient = (confidence, responseType = 'standard') => {
     try {
         // Different confidence thresholds based on response type
         const thresholds = {
@@ -74,7 +74,7 @@ const isConfidenceSufficient = (confidence, responseType = 'standard') => {
  * @param {Array} searchResults - Array of search results with scores
  * @returns {number} Overall confidence score for search results
  */
-const calculateSearchConfidence = (searchResults) => {
+export const calculateSearchConfidence = (searchResults) => {
     try {
         if (!Array.isArray(searchResults) || searchResults.length === 0) {
             return 0.1; // Very low confidence if no results
@@ -102,7 +102,7 @@ const calculateSearchConfidence = (searchResults) => {
  * @param {Array} contextData - Context data used
  * @returns {number} Adjusted confidence score
  */
-const adjustConfidenceForContentQuality = (baseConfidence, contextData = []) => {
+export const adjustConfidenceForContentQuality = (baseConfidence, contextData = []) => {
     try {
         let adjustedConfidence = baseConfidence;
 
@@ -128,9 +128,3 @@ const adjustConfidenceForContentQuality = (baseConfidence, contextData = []) => 
     }
 };
 
-export {
-    calculateResponseConfidence,
-    isConfidenceSufficient,
-    calculateSearchConfidence,
-    adjustConfidenceForContentQuality
-};

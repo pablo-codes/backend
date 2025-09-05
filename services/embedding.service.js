@@ -4,7 +4,7 @@ import { togetherAIClient, togetherAIConfig } from '../config/togetherAi.js';
 /**
  * Generate embedding for a single text using BAAI/bge-base-en-v1.5
  */
-const generateEmbedding = async (text) => {
+export const generateEmbedding = async (text) => {
     try {
 
         // Validate input
@@ -37,10 +37,8 @@ const generateEmbedding = async (text) => {
  * Generate embeddings for multiple texts
 
  */
-const generateEmbeddings = async (texts) => {
+export const generateEmbeddings = async (texts) => {
     try {
-
-
         // Validate input
         if (!Array.isArray(texts) || texts.length === 0) {
             throw new Error('Invalid texts input for embeddings generation');

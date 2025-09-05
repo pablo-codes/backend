@@ -1,4 +1,4 @@
-import { db } from "../config/db.js";
+import { db, dbConfig } from "../config/db.js";
 
 /**
  * Save lead data to MongoDB
@@ -12,7 +12,7 @@ export const saveLeadToDB = async (leadData) => {
 
     try {
 
-        const collection = db.collection(process.env.LEAD_COLLECTION || 'leads');
+        const collection = db.collection(dbConfig.lead);
 
         const leadDocument = {
             ...leadData,
@@ -34,7 +34,7 @@ export const saveLeadToDB = async (leadData) => {
 export const getAllLeadsFromDB = async () => {
     try {
 
-        const collection = db.collection(process.env.LEAD_COLLECTION || 'leads');
+        const collection = db.collection(dbConfig.lead);
 
         const leads = await collection.find({}).sort({ timestamp: -1 }).toArray();
         return leads;
@@ -44,19 +44,3 @@ export const getAllLeadsFromDB = async () => {
     }
 };
 
-/**
- * Clear all leads from MongoDB (optional)
- * @returns {Promise<Object>} Delete result
- */
-export const clearLeadsFromDB = async () => {
-    try {
-
-        const collection = db.collection(process.env.LEAD_COLLECTION || 'leads');
-
-        const result = await collection.deleteMany({});
-        return result;
-    } catch (error) {
-        console.error('Error clearing leads from DB:', error.message);
-        throw error;
-    }
-};

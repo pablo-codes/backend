@@ -7,9 +7,9 @@ dotenv.config();
 // MongoDB Configuration
 const dbConfig = {
     uri: process.env.MONGODB_URI,
-    database: process.env.MONGODB_DATABASE,
-    collection: process.env.MONGODB_COLLECTION,
-    lead: process.env.LEAD
+    database: process.env.MONGODB_DATABASE || "vector_db",
+    collection: process.env.MONGODB_COLLECTION || "embeddings",
+    lead: process.env.LEAD || "lead"
 };
 
 
