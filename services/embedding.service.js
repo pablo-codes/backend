@@ -1,5 +1,5 @@
 import { togetherAIClient, togetherAIConfig } from '../config/togetherAi.js';
-import logger from '../utils/logger.util.js';
+
 
 /**
  * Generate embedding for a single text using BAAI/bge-base-en-v1.5
@@ -25,9 +25,9 @@ const generateEmbedding = async (text) => {
         // Return the embedding vector
         return response.data[0].embedding;
     } catch (error) {
-        logger.error(error, 'Error generating embedding:');
+        console.error(error, 'Error generating embedding:');
         if (error.response) {
-            logger.error(JSON.stringify(error.response.data, null, 2), 'API Error Response:');
+            console.error(JSON.stringify(error.response.data, null, 2), 'API Error Response:');
         }
         throw new Error(`Failed to generate embedding: ${error.message}`);
     }

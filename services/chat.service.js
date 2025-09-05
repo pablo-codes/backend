@@ -1,5 +1,5 @@
 import { togetherAIClient, togetherAIConfig } from '../config/togetherAi.js';
-import logger from '../utils/logger.util.js';
+
 
 /**
  * Generate chat response using Meta-Llama-3.1-8B-Instruct-Turbo
@@ -39,9 +39,9 @@ const generateChatResponse = async (messages, options = {}) => {
             usage: response.usage
         };
     } catch (error) {
-        logger.error(error, 'Error generating chat response:');
+        console.error(error, 'Error generating chat response:');
         if (error.response) {
-            logger.error(error.response, 'API Error Response:');
+            console.error(error.response, 'API Error Response:');
         }
         throw new Error(`Failed to generate chat response: ${error.message}`);
     }

@@ -1,5 +1,5 @@
 import { db, dbConfig } from '../config/db.js';
-import logger from '../utils/logger.util.js';
+
 
 /**
  * Search for relevant content using vector similarity search

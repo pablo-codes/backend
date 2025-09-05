@@ -7,7 +7,7 @@ import {
     adjustConfidenceForContentQuality
 } from '../services/confidence.service.js';
 import { constructPrompt, generateCTA, formatSources } from '../utils/prompt.util.js';
-import logger from '../utils/logger.util.js';
+
 
 /**
  * Handle chat message processing
@@ -16,7 +16,7 @@ import logger from '../utils/logger.util.js';
  */
 const handleChatMessage = async (req, res) => {
     try {
-        logger.info(req.body)
+        console.info(req.body)
         const { message } = req.body;
 
         // Validate input
@@ -26,7 +26,7 @@ const handleChatMessage = async (req, res) => {
             });
         }
 
-        logger.info(`Processing chat message: "${message}"`);
+        console.info(`Processing chat message: "${message}"`);
 
         // Step 1: Generate query embedding
         const queryEmbedding = await generateEmbedding(message);
@@ -72,7 +72,7 @@ const handleChatMessage = async (req, res) => {
         });
 
     } catch (error) {
-        logger.error(error.message, 'Error handling chat message:');
+        console.error(error.message, 'Error handling chat message:');
 
         // Return fallback response
         res.json({
@@ -108,7 +108,7 @@ const getChatHealth = async (req, res) => {
             timestamp: new Date().toISOString()
         });
     } catch (error) {
-        logger.error(error, "Chat Health error")
+        console.error(error, "Chat Health error")
         res.status(500).json({
             status: 'ERROR',
             message: 'Chat service health check failed',

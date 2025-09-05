@@ -16,10 +16,8 @@ const app = express();
 const PORT = process.env.PORT;
 
 // Middleware
-
 let corsOptions;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 if (process.env.NODE_ENV === 'production') {
     corsOptions = {
         origin: 'https://pablo-codes.github.io',
@@ -43,7 +41,6 @@ app.use(cors(corsOptions));
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use('/download', express.static(path.join(__dirname, 'download')));
 app.set('trust proxy', 1)
 
 // Routes

@@ -1,13 +1,8 @@
 import geoip from 'geoip-lite';
-import { logLeadData, getTxtFileStats, clearLeadDataFile } from '../utils/userslogger.util.js';
-import logger from '../utils/logger.util.js';
-import { convertTxtToCsv, getCsvFileStats } from '../utils/csv.util.js';
-
+import { saveLeadToDB, getAllLeadsFromDB } from '../services/lead.services.js';
 
 /**
  * Track lead interaction when CTA is clicked
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
  */
 const trackLead = async (req, res) => {
     try {
@@ -19,6 +14,10 @@ const trackLead = async (req, res) => {
             return res.status(400).json({ error: 'CTA type is required' });
         }
 
+        if (!ctaUrl) {
+            return res.status(400).json({ error: 'CTA URL is required' });
+        }
+
         // Get location data from IP
         const location = getLocationFromIP(ipAddress);
 
@@ -26,13 +25,15 @@ const trackLead = async (req, res) => {
         const leadData = {
             ip: ipAddress,
             country: location.country,
+            city: location.city || 'Unknown',
+            region: location.region || 'Unknown',
             timestamp: new Date().toISOString(),
             ctaType: ctaType,
             ctaUrl: ctaUrl
         };
 
-        // Log to file
-        await logLeadData(leadData);
+        // Save to MongoDB
+        await saveLeadToDB(leadData);
 
         res.json({
             success: true,
@@ -40,15 +41,14 @@ const trackLead = async (req, res) => {
         });
 
     } catch (error) {
-        logger.error(error.message, 'Error tracking lead:');
+        console.error('Error tracking lead:', error.message);
         res.status(500).json({ error: 'Failed to track lead' });
     }
 };
 
 /**
  * Get location data from IP address
- * @param {string} ipAddress - IP address to lookup
- * @returns {Object} Location data
+
  */
 const getLocationFromIP = (ipAddress) => {
     try {
@@ -71,7 +71,7 @@ const getLocationFromIP = (ipAddress) => {
             timezone: 'Unknown'
         };
     } catch (error) {
-        logger.error(error.message, 'Error getting location from IP:');
+        console.error('Error getting location from IP:', error.message);
         return {
             country: 'Unknown',
             region: 'Unknown',
@@ -81,49 +81,55 @@ const getLocationFromIP = (ipAddress) => {
     }
 };
 
-
-
-
-const TEN_MINUTES = 10 * 60 * 1000;
-
+/**
+ * Export leads as CSV and send as download
+ */
 const handleCsvExport = async (req, res) => {
     try {
-        const [csvStats, txtStats] = await Promise.all([
-            getCsvFileStats(),
-            getTxtFileStats()
-        ]);
+        // Get all leads from MongoDB
+        const leads = await getAllLeadsFromDB();
 
-        let regenerate = false;
+        // Generate CSV content
+        let csvContent = 'ip_address,country,city,region,timestamp,cta_type,cta_url\n';
 
-        if (txtStats && csvStats) {
-            // TXT is newer than CSV
-            if (txtStats.mtime > csvStats.mtime) {
-                const diff = Date.now() - txtStats.mtime.getTime();
-                if (diff > TEN_MINUTES) {
-                    regenerate = true;
+        leads.forEach(lead => {
+            // Escape any commas or quotes in the data
+            const escapedFields = [
+                lead.ip,
+                lead.country,
+                lead.city,
+                lead.region,
+                lead.timestamp,
+                lead.ctaType,
+                lead.ctaUrl
+            ].map(field => {
+                if (typeof field === 'string' && (field.includes(',') || field.includes('"'))) {
+                    return `"${field.replace(/"/g, '""')}"`;
                 }
-            }
-        } else if (txtStats && !csvStats) {
-            // No CSV file exists, but TXT does
-            regenerate = true;
-        }
+                return field;
+            });
 
-        if (regenerate) {
-            await convertTxtToCsv();
-            await clearLeadDataFile();
-        }
-
-        // Return file link regardless
-        res.json({
-            message: 'CSV ready',
-
+            csvContent += escapedFields.join(',') + '\n';
         });
+
+        // Set headers for file download
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="lead_data.csv"');
+
+        // Send CSV content
+        res.send(csvContent);
+
     } catch (error) {
-        logger.error(error, 'CSV export error:');
-        res.json({ error: 'Failed to generate CSV', url: process.env.BACKEND_URL + '/download/lead_data.csv' });
+        console.error('CSV export error:', error.message);
+        res.status(500).json({ error: 'Failed to generate CSV' });
     }
 };
 
+
+
+/**
+ * Get lead tracking health status
+ */
 const getLeadHealth = async (req, res) => {
     try {
         res.json({
@@ -132,7 +138,7 @@ const getLeadHealth = async (req, res) => {
             timestamp: new Date().toISOString()
         });
     } catch (error) {
-        logger.error(error, "Lead Health error")
+        console.error("Lead Health error:", error.message);
         res.status(500).json({
             status: 'ERROR',
             message: 'Lead service health check failed',
@@ -140,6 +146,8 @@ const getLeadHealth = async (req, res) => {
         });
     }
 };
+
+
 
 export {
     trackLead,

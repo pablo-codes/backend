@@ -1,4 +1,4 @@
-import logger from "../utils/logger.util.js";
+
 import requestIp from "request-ip";
 import geoip from "geoip-lite";
 
@@ -13,7 +13,7 @@ export const requestLogger = (req, res, next) => {
         const geo = geoip.lookup(clientIp);
 
 
-        logger.debug(
+        console.debug(
             {
                 method: req.method,
                 url: req.url,
@@ -38,7 +38,7 @@ export const requestLogger = (req, res, next) => {
         );
 
     } catch (error) {
-        logger.error(error, "Request Logger error")
+        console.error(error, "Request Logger error")
     }
 
     next();

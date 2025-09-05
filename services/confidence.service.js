@@ -1,4 +1,4 @@
-import logger from "../utils/logger.util.js";
+
 
 /**
  * Calculate confidence score for AI responses
@@ -39,7 +39,7 @@ const calculateResponseConfidence = (response, usage, contextData = []) => {
         // Cap confidence at 0.95
         return Math.min(confidence, 0.95);
     } catch (error) {
-        logger.error(error, 'Error calculating response confidence:');
+        console.error(error, 'Error calculating response confidence:');
         return 0.5; // Default confidence
     }
 };
@@ -62,7 +62,7 @@ const isConfidenceSufficient = (confidence, responseType = 'standard') => {
         const threshold = thresholds[responseType] || thresholds.standard;
         return confidence >= threshold;
     } catch (error) {
-        logger.error(error, 'Error determining confidence sufficiency:');
+        console.error(error, 'Error determining confidence sufficiency:');
         return false;
     }
 };
@@ -91,7 +91,7 @@ const calculateSearchConfidence = (searchResults) => {
         // Search scores are typically between 0 and 1, so we map them directly
         return Math.min(Math.max(averageScore, 0.1), 0.9);
     } catch (error) {
-        logger.error(error, 'Error calculating search confidence:',);
+        console.error(error, 'Error calculating search confidence:',);
         return 0.3; // Low confidence fallback
     }
 };
@@ -123,7 +123,7 @@ const adjustConfidenceForContentQuality = (baseConfidence, contextData = []) => 
         // Cap at reasonable bounds
         return Math.min(Math.max(adjustedConfidence, 0.1), 0.95);
     } catch (error) {
-        logger.error(error, 'Error adjusting confidence for content quality:');
+        console.error(error, 'Error adjusting confidence for content quality:');
         return baseConfidence;
     }
 };

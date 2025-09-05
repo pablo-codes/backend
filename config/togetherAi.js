@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import TogetherAi from 'together-ai';
-import logger from '../utils/logger.util.js';
+
 
 dotenv.config();
 
