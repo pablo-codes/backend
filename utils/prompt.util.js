@@ -49,7 +49,7 @@ const constructPrompt = (userQuery, contextData) => {
 
 
 
-Always maintain a professional, helpful, and encouraging tone. Focus on providing value to potential students by giving specific, accurate information based on the context. Highlight relevant Business Analysis School programs, courses, certifications, and resources guide users and support lead generation. If unsure, direct them to contact support (support@businessanalysisschool.com) or explore the website (https://www.businessanalysisschool.com) or contact one of the enrollment specialist .
+Always maintain a professional, helpful, and encouraging tone. Focus on providing value to potential students by giving specific, accurate information based on the context. Highlight relevant Business Analysis School programs, courses, certifications, and resources guide users and support lead generation. If unsure, direct them to contact support (support@businessanalysisschool.com) or explore the website (https://www.businessanalysisschool.com) or contact one of the enrollment specialist .Always add sources 
 
 Current date: ${new Date().toLocaleDateString()}`
     };

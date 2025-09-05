@@ -5,43 +5,36 @@ import { client } from './config/db.js';
 import apiRoutes from './routes/api.route.js';
 import helmet from 'helmet';
 import { requestLogger } from './middleware/request.middleware.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT;
 
 // Middleware
 let corsOptions;
-
 if (process.env.NODE_ENV === 'production') {
     corsOptions = {
         origin: 'https://pablo-codes.github.io',
         preflightContinue: false,
         maxAge: 600,
-        // credentials: true,
         optionSuccessStatus: 200
     };
 } else {
-
     corsOptions = {
         origin: 'http://localhost:3000',
-        // credentials: true,
         preflightContinue: false,
         maxAge: 600,
         optionSuccessStatus: 200
     };
 }
-app.use(requestLogger)
+app.use(requestLogger);
 app.use(cors(corsOptions));
-app.use(helmet())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.set('trust proxy', 1)
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1);
 
 // Routes
 app.use('/api', apiRoutes);
@@ -72,20 +65,5 @@ app.use((err, req, res, next) => {
     });
 });
 
-
-
-// Database connection and server startup
-
-try {
-    await client.connect();
-    console.log("📚 Database connection established");
-
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running on port ${PORT}`);
-        console.log(`📚 Health check: ${process.env.BACKEND_URL}/api/health`);
-    });
-} catch (err) {
-    console.error("❌ Failed to connect DB:", err);
-    process.exit(1);
-}
-
+// Export the app
+export default app;
